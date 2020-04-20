@@ -38,10 +38,10 @@ global x2qy1q;
 x2qy1q = 4;
 
 %坐标系是x轴向右，y轴向下
-SizeX = 45;%地图的x轴方向的长度
-SizeY = 60;%地图的y轴方向的长度
-% Area = ones(SizeY,SizeX); %矩阵与常规的地图x y 是不一样的 反着来的
-Areastore = xlsread('数据图.xlsx');
+SizeX = 15;%地图的x轴方向的长度
+SizeY = 10;%地图的y轴方向的长度
+Areastore = ones(SizeY,SizeX); %矩阵与常规的地图x y 是不一样的 反着来的
+% Areastore = xlsread('数据图.xlsx');
 Area = Areastore;
 
 
@@ -50,7 +50,8 @@ BestGrade = 0;
 BestPath = [];
 
 disp('迭代Iteration次，Iteration越大，越有机会找到最优值');
-Iteration = 1
+Iteration = 500
+recordall = [];
 for num = 1:Iteration
     record = [];
     situationrecord = [];
@@ -61,11 +62,13 @@ for num = 1:Iteration
         xy = [ceil(solution(i)/size(Area,1)),mod(solution(i)-1,size(Area,1))+1];
         Grade = GetGrade(Area,xy+[1,1]);
         situationrecord = [situationrecord;Grade];
+        
         if (Grade~=0)
             record = [record,[{xy};Grade]];
         end
         Area(xy(2),xy(1)) = 0;
     end
+    recordall = [recordall;{situationrecord}];
     allGrade = 0;
     for i=1:size(record,2)
         allGrade = record{2,i} + allGrade;
@@ -82,39 +85,12 @@ disp('迭代Iteration次后，最佳分数为finalBestGrade');
 finalBestGrade = BestGrade
 disp('最佳开采顺序储存在finalBestPath中');
 
-sitnum = zeros(1,9);
-for i=1:size(BestSituationrecord,1)
-    if (BestSituationrecord(i)==szq)
-        sitnum(1) = sitnum(1)+1;
-    end
-    if (BestSituationrecord(i)==y2qx1q)
-        sitnum(2) = sitnum(2)+1;
-    end
-    if (BestSituationrecord(i)==y2q)
-        sitnum(3) = sitnum(3)+1;
-    end
-    if (BestSituationrecord(i)==x2qy1q)
-        sitnum(4) = sitnum(4)+1;
-    end
-    if (BestSituationrecord(i)==y1qx1q)
-        sitnum(5) = sitnum(5)+1;
-    end
-    if (BestSituationrecord(i)==x2q)
-        sitnum(6) = sitnum(6)+1;
-    end
-    if (BestSituationrecord(i)==y1q)
-        sitnum(7) = sitnum(7)+1;
-    end
-    if (BestSituationrecord(i)==x1q)
-        sitnum(8) = sitnum(8)+1;
-    end
-    if (BestSituationrecord(i)==szbq)
-        sitnum(9) = sitnum(9)+1;
-    end
-    
+disp('不同情况出现的次数的所有情况sitnum')
+for i=1:size(recordall,1)
+    sitnum = getsitnum(recordall{i});
 end
-disp('不同情况出现的次数存储在sitnum中')
-sitnum
+disp('最好的不同情况出现的次数存储在bestsitnum中')
+bestsitnum = getsitnum(BestSituationrecord)
 
 for i=1:size(finalBestPath,1)
     plot(finalBestPath{i}(1),finalBestPath{i}(2),'r.');
