@@ -25,3 +25,5 @@ Gen=150; %迭代代数 1500
 修改这些变量可以改善性能。10*15的图，最优效果打分为1078.而用普通方法，500轮迭代最优值仅为825.
 
 遗传算法效果动图如下
+
+![image](https://github.com/Robotics-Zhikai/Intelligence-Algorithm/blob/master/Genetic%20Algorithm/%E4%B8%80%E4%B8%AA%E5%BA%94%E7%94%A8/IntelligentMethod/result.gif)
