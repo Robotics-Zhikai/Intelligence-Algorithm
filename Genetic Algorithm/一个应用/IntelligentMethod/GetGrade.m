@@ -5,7 +5,11 @@ function Grade = GetGrade(Area,xy) %得到某一网格的分数
     Area = [-1*ones(1,size(Area,2));Area];
     %必须保证从网格抽象过来的矩阵的最外层值为-1
     Area = Area';
-    if (Area(xy(1),xy(2))==-1)
+    if (Area(xy(1),xy(2))==-1  )
+        Grade = 0;
+        return;
+    end
+    if Area(xy(1),xy(2))==0
         Grade = 0;
         return;
     end

@@ -2,10 +2,10 @@ clc
 clear
 close all
 
-Set_precision=0.01;
-population_number=90;  %初始种群数量
+Set_precision=0.0005;
+population_number=250;  %初始种群数量
 Mating_probability=0.4; %交配概率
-Mutation_probability=0.0015; %突变概率
+Mutation_probability=0.0001; %突变概率
 Gen=150; %迭代代数 1500
 
 %%
@@ -49,10 +49,11 @@ ParameterUper = size(Area,1)*size(Area,2);
 population = [];
 for j=1:population_number
     OneSolution = randperm(ParameterUper);
-    chromosome = [];
-    for i=1:size(OneSolution,2)
-        chromosome = [chromosome Encode(ParameterLow,ParameterUper,Set_precision,OneSolution(i))];
-    end
+    chromosome = Getchromosome(ParameterLow,ParameterUper,Set_precision,OneSolution);
+%     chromosome = [];
+%     for i=1:size(OneSolution,2)
+%         chromosome = [chromosome Encode(ParameterLow,ParameterUper,Set_precision,OneSolution(i))];
+%     end
     population = [population;chromosome];
 end
 
@@ -66,20 +67,22 @@ column=size(population_x1,2);
 parameter_range_Low=ParameterLow;%这是常矩阵
 parameter_range_Upper=ParameterUper;%这是常矩阵
 
-[fitness_list,GradeList]=evalfuc(parameter_range_Low,parameter_range_Upper,Set_precision,population);
+[fitness_list,GradeList,population]=evalfuc(parameter_range_Low,parameter_range_Upper,Set_precision,population);
+ lastbestfigure = max(fitness_list(:,1));
+axis([0 Gen (3/4)*max(fitness_list(:,1)) max(fitness_list(:,1))]);
 recordBest = [];
 flag = 1;
 gifFlag = 1;
 for i=1:Gen
     population=operate_copy(fitness_list,population);
-    population=Mating_operation(Mating_probability,population);
-    population=Mutation_operate(Mutation_probability,population);
-    [fitness_list,GradeList]=evalfuc(parameter_range_Low,parameter_range_Upper,Set_precision,population);
+    population=Mating_operation(Mating_probability,population,parameter_range_Low,parameter_range_Upper,Set_precision);
+    population=Mutation_operate(Mutation_probability,population,parameter_range_Low,parameter_range_Upper,Set_precision);
+    [fitness_list,GradeList,population]=evalfuc(parameter_range_Low,parameter_range_Upper,Set_precision,population);
     [Best_dec_independent,Best_dec_dependent,Best_Grade]=get_best_result_from_population(parameter_range_Low,parameter_range_Upper,Set_precision,fitness_list,population,GradeList); %从一个种群中得到适应度最好的一个解，输入参数为该种群和该种群的适应度表
-    if flag == 1
-        flag = 0;
-        lastbestfigure = Best_dec_dependent;
-    end
+%     if flag == 1
+%         flag = 0;
+%         lastbestfigure = Best_dec_dependent;
+%     end
     recordBest{i,1} = Best_dec_dependent;
     recordBest{i,2} = Best_dec_independent;
     recordBest{i,3} = Best_Grade;
@@ -112,10 +115,10 @@ for i=1:Gen
     [imind,cm] = rgb2ind(imind,256);
 
     if gifFlag~=99
-    imwrite(imind,cm,'test4.gif','gif', 'Loopcount',inf,'DelayTime',1e-4);
+    imwrite(imind,cm,'test5.gif','gif', 'Loopcount',inf,'DelayTime',1e-4);
     gifFlag = 99;
     else
-    imwrite(imind,cm,'test4.gif','gif','WriteMode','append','DelayTime',1e-4);
+    imwrite(imind,cm,'test5.gif','gif','WriteMode','append','DelayTime',1e-4);
     end
             
 end

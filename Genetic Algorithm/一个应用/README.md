@@ -27,3 +27,23 @@ Gen=150; %迭代代数 1500
 遗传算法效果动图如下
 
 ![image](https://github.com/Robotics-Zhikai/Intelligence-Algorithm/blob/master/Genetic%20Algorithm/%E4%B8%80%E4%B8%AA%E5%BA%94%E7%94%A8/IntelligentMethod/result.gif)
+
+20200421 考虑到每个解向量的每个元素都是相互耦合的（全排列），不允许有重复，但是昨天写的代码在经过交配、突变的操作后，会出现重复元素的情况。进而导致即便是曾遍历过的网格仍然会再次遍历，因此昨天最好打分是1078是不正确的。今天先把Grade=0的情况加上，又改了打分方式（把没有遍历的再遍历一遍），又改了突变后会出现重复元素的情况。还没有修改由于交配出现的重复元素。时间有限，就先把问题保留在这。效果不像昨天那样明显，但是还是比普通方法好，最优效果打分为896。
+
+设置
+
+Set_precision=0.0005;
+
+population_number=250;  %初始种群数量
+
+Mating_probability=0.4; %交配概率
+
+Mutation_probability=0.0001; %突变概率
+
+Gen=150; %迭代代数 
+
+效果动图如下
+
+![image](https://github.com/Robotics-Zhikai/Intelligence-Algorithm/blob/master/Genetic%20Algorithm/%E4%B8%80%E4%B8%AA%E5%BA%94%E7%94%A8/IntelligentMethod/result2.gif)
+
+因此，传统的遗传算法解决的问题中每个变量应该是独立的，若各个变量有耦合，则不修改算法结构的话算法效果不好，解决方法可以是修改算法结构（突变、交配方式），也可以是对各个变量进行解耦，有兴趣可以继续查找文献寻求解决方法。
